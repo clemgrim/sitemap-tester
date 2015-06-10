@@ -1,0 +1,21 @@
+{
+  "name": "sitemap",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Clément Grimault <clement.grimault@agencetexto.com> (http://agence-texto.fr/)",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^1.0.0",
+    "lodash": "^3.9.3",
+    "log-symbols": "^1.0.2",
+    "opn": "^1.0.2",
+    "q": "^1.4.1",
+    "request": "^2.57.0",
+    "xml2js": "^0.4.9",
+    "yargs": "^3.10.0"
+  }
+}
