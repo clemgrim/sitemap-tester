@@ -2,7 +2,6 @@
 
 var yargs = require('yargs');
 var fs = require('fs');
-var exec = require('child_process').exec;
 var symbols = require('log-symbols');
 var chalk = require('chalk');
 var sitemap = require('./');
@@ -29,7 +28,7 @@ if (argv.help) {
 
 sitemap.get(argv.url, function (err, data) {
 	if (err) {
-		die(err);
+		die(err, argv.url);
 	}
 	
 	console.log(chalk.green('>'), ' Sitemap analysé : ', chalk.cyan(data.urlset.url.length, ' urls à valider'));
@@ -41,7 +40,7 @@ sitemap.get(argv.url, function (err, data) {
 		clear();
 		
 		if (e) {
-			die(e);
+			die(e, argv.url);
 		}
 		
 		console.log(symbols.success + ' Success: ', stats.success);
@@ -77,9 +76,9 @@ function clear() {
 	console.log('\n');
 }
 
-function die(msg, status) {
+function die(msg, reason) {
 	msg = msg || 'Une erreur est survenue'
-	console.log(chalk.red(msg), status ? chalk.cyan(argv.url) : '');
+	console.log(chalk.red(msg), status ? chalk.cyan(reason) : '');
 	process.exit(0);
 }
 

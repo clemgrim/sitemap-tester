@@ -8,8 +8,7 @@ module.exports.get = function (url, cb) {
 	cb = cb || _.noop;
 
 	if (!url) {
-		cb('Veuillez fournir une url');
-		return;
+		return cb('Veuillez fournir une url');
 	}
 
 	url = _.trimRight(url, '/') + '/sitemap.xml';
@@ -38,6 +37,10 @@ module.exports.get = function (url, cb) {
 
 module.exports.explore = function (data, cb) {
 	cb = cb || _.noop;
+	
+	if (!data || !data.urlset || !_.isArray(data.urlset.url)) {
+		return cb('Données invalides');
+	}
 	
 	var promises = [];
 	
