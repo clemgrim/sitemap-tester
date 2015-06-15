@@ -5,7 +5,7 @@ var fs = require('fs');
 var symbols = require('log-symbols');
 var chalk = require('chalk');
 var sitemap = require('./');
-var argv;
+var argv, interval;
 
 argv = yargs.usage('Usage: $0 -u <url>')
 	.alias('u', 'url')
@@ -26,17 +26,17 @@ if (argv.help) {
 	process.exit(0);
 }
 
-sitemap.get(argv.url, function (err, data) {
+sitemap.get(argv.url, function (err, urls) {
 	if (err) {
 		die(err, argv.url);
 	}
 	
-	console.log(chalk.green('>'), ' Sitemap analysé : ', chalk.cyan(data.urlset.url.length, ' urls à valider'));
+	console.log(chalk.green('>'), ' Sitemap analysé : ', chalk.cyan(urls.length, ' urls à valider'));
 	
 	progress();
 	interval = setInterval(progress, 2000);
 	
-	sitemap.explore(data, function (e, stats) {
+	sitemap.explore(urls, argv.url, function (e, stats) {
 		clear();
 		
 		if (e) {
@@ -78,7 +78,7 @@ function clear() {
 
 function die(msg, reason) {
 	msg = msg || 'Une erreur est survenue'
-	console.log(chalk.red(msg), status ? chalk.cyan(reason) : '');
+	console.log(chalk.red(msg), reason ? chalk.cyan(reason) : '');
 	process.exit(0);
 }
 

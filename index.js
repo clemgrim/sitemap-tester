@@ -26,25 +26,19 @@ module.exports.get = function (url, cb) {
 				throw new Error ('Sitemap invalide');
 			}
 			
-			data.sitemapUrl = url;
-			
-			cb(null, data);
+			cb(null, data.urlset.url);
 		})
 		.fail(function (msg) {
 			cb(msg);
 		});
 };
 
-module.exports.explore = function (data, cb) {
+module.exports.explore = function (urls, id, cb) {
 	cb = cb || _.noop;
-	
-	if (!data || !data.urlset || !_.isArray(data.urlset.url)) {
-		return cb('Données invalides');
-	}
 	
 	var promises = [];
 	
-	_.chunk(data.urlset.url, 5).forEach(function (group, i) {
+	_.chunk(urls, 5).forEach(function (group, i) {
 		group.forEach(function (entry, k) {
 			var url = entry.loc[0];
 			
@@ -58,7 +52,7 @@ module.exports.explore = function (data, cb) {
 						dfd.resolve(res);
 					}
 				});
-			}, i * 800)
+			}, i * 800);
 			
 			promises.push(dfd.promise);
 		});
@@ -78,14 +72,14 @@ module.exports.explore = function (data, cb) {
 				}
 			});
 			
-			dfd.resolve({yep: yep, nope: nope, total: res.length, url: data.sitemapUrl});
+			dfd.resolve({yep: yep, nope: nope, total: res.length});
 			
 			return dfd.promise;
 		})
 		.then(function (stats) {
 			var now = new Date();
 			var output = {
-	          sitemap: stats.url,
+	          sitemap: id,
 			  date: start.toLocaleString(),
 			  time: (now.getTime() - start.getTime()) / 1000,
 			  pages: stats.total,
